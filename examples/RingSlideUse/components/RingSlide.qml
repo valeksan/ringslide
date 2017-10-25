@@ -1,37 +1,36 @@
-import QtQuick 2.7
-
-/* ПРИМЕР ИСПОЛЬЗОВАНИЯ
-        ...
-        ListModel {
-            id: ringModel_upit
-            ListElement{ label:"0";}
-            ListElement{ label:"1";}
-            ListElement{ label:"2";}
-            ListElement{ label:"3";}
-            ListElement{ label:"4";}
-            ListElement{ label:"5";}
-            ListElement{ label:"6";}
-            ListElement{ label:"7";}
-        }
-        RingSlide {
-            title: qsTr("Цифирки")
-            font.bold: true
-            model: ringModel_upit
-            position: Qt.Horizontal // Qt.Horizontal or Qt.Vertical
-            type: 1 // 1 or 2
-            width: 60
-            height: 180
-            currentIndex: 0 // or Pars.someRingIndex
-            onIndexChanged: {
-                currentIndex = index // or Pars.setSomeRingIndex(index)
-            }
-        }
-        ...
-  */
+import QtQuick 2.4
 
 Rectangle
 {
     id: root_ring
+
+    /* Внимание! Чтобы контрол работал, необходимо прописать слот на сигнал indexChanged(index)
+      Пример:
+        RingSlide {
+            title: qsTr("Цифирки")
+            value: 0
+            type: 1 // 1 or 2
+            position: Qt.Horizontal // Qt.Horizontal or Qt.Vertical
+            width: 60
+            height: 180
+            model: ListModel {
+                ListElement{ label:"0"; value:0.1; }
+                ListElement{ label:"1"; value:0.5; }
+                ListElement{ label:"2"; value:1.7; }
+                ListElement{ label:"3"; value:2.0; }
+                ListElement{ label:"4"; value:8.0; }
+                ListElement{ label:"5"; value:11.4; }
+                ListElement{ label:"6"; value:12.0; }
+                ListElement{ label:"7"; value:15.5; }
+            }
+            // ...
+            onIndexChanged: { // !
+                currentIndex = index // or Pars.setSomeRingIndex(index)
+            }
+        }
+
+    */
+
     color: "transparent"
 
     /* Размеры и положение */
@@ -67,15 +66,7 @@ Rectangle
     property bool dimmed: false				// контрол выключен (для изменения вида и отключения)
 
     /* Модель с данными (заголовками) */
-    property ListModel model //: ring_model_test
-    /* 
-    ListModel {
-        id: ring_model_test
-        ListElement{ label:"one";}
-        ListElement{ label:"two";}
-        ListElement{ label:"three";}        
-    }
-    */
+    property ListModel model
 
     /* Функциональные сигналы */
     signal indexChanged(int index)	// посылается всякий раз, когда меняется положение ползунка
@@ -83,8 +74,20 @@ Rectangle
     /* Не трогаемые параметры */
     property Component ring: getRingComponent(type, position)
 
-    /* Вспомогательные методы */
-    // Получить цвет по индексу элемента, активный 
+    /* Методы */
+    function getValue(idx) {
+        return model.get(idx).value
+    }
+    function currentValue() {
+        return getValue(currentIndex)
+    }
+
+    /* Системные функции */
+    // Изменить вид отображения
+    function updateView() {
+        ring = getRingComponent(type, position);
+    }
+    // Получить цвет по индексу элемента, активный
     function putColor(currentIndex,index) {
         return (currentIndex === index) ? colorTextActiveItem : "black";
     }
@@ -125,23 +128,13 @@ Rectangle
         return ring_horizontal_1;
     }
 
-    /* Методы */
-    // Изменить вид отображения
-    function updateView() {        
-        ring = getRingComponent(type, position);
-    }
-
     /* Обработчики */
     onPositionChanged: {
         updateView();
     }
     onTypeChanged: {
         updateView();
-    }
-    // Обработчик изменения индекса по умолчанию (переопределяется)
-    onIndexChanged: {
-        currentIndex = index
-    }
+    }    
 
     /* Объекты */
     // Главный заголовок

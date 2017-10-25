@@ -23,7 +23,7 @@ ApplicationWindow {
     }
     ListModel {
         id: ringModel2
-        ListElement{ label:"A0<br>0.5";}
+        ListElement{ label:"A0<br>0.5"; value:6.66; }
         ListElement{ label:"A1<br>1.2";}
         ListElement{ label:"A2<br>2.6";}
         ListElement{ label:"A3<br>3.1";}
@@ -59,6 +59,10 @@ ApplicationWindow {
             height: 80
             stepSize: 500/model.count
             color: viewLimits.checked ? "gray" : "transparent"
+            onIndexChanged: {
+                currentIndex = index
+                console.log(currentValue())
+            }
         }
         Components.RingSlide {
             id: ring2
@@ -72,6 +76,9 @@ ApplicationWindow {
             numLinesTitleUse: 2
             title: "ABS<br>CDEFGH"
             color: viewLimits.checked ? "gray" : "transparent"
+            onIndexChanged: {
+                currentIndex = index
+            }
         }
         Row {
             spacing: 10
@@ -82,6 +89,9 @@ ApplicationWindow {
                 type: 2
                 stepSize: 35
                 color: viewLimits.checked ? "gray" : "transparent"
+                onIndexChanged: {
+                    currentIndex = index
+                }
             }
             Components.RingSlide {
                 id: ring5
@@ -92,6 +102,9 @@ ApplicationWindow {
                 fixedSelectorWidth: 15
                 width: 100
                 color: viewLimits.checked ? "gray" : "transparent"
+                onIndexChanged: {
+                    currentIndex = index
+                }
             }
             Components.RingSlide {
                 id: ring3
@@ -102,6 +115,9 @@ ApplicationWindow {
                 fixedSelectorWidth: 15
                 width: 80
                 color: viewLimits.checked ? "gray" : "transparent"
+                onIndexChanged: {
+                    currentIndex = index
+                }
             }
             Column {
                 CheckBox {
