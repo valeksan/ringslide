@@ -75,11 +75,20 @@ Rectangle
     property Component ring: getRingComponent(type, position)
 
     /* Методы */
+    // Значение по индексу
     function getValue(idx) {
         return model.get(idx).value
     }
+    // Текущее выбранное значение
     function currentValue() {
         return getValue(currentIndex)
+    }
+    // Возвращает индекс по первому совпавшему с аргументом в модели значению, иначе возвратит -1
+    function indexOfValue(value) {
+        for(var i=0; i<model.count; i++) {
+            if(getValue(i) === value) return i;
+        }
+        return -1;
     }
 
     /* Системные функции */
